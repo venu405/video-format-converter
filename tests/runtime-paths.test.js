@@ -5,7 +5,7 @@ const { test } = require("node:test");
 const { resolveRuntimePaths } = require("../runtime-paths");
 
 test("Windows runtime paths preserve the packaged x64 engine layout", () => {
-  const resourcesPath = "C:\\Program Files\\FlyingMouse Format\\resources";
+  const resourcesPath = "C:\\Program Files\\Video Format Converter\\resources";
   const paths = resolveRuntimePaths({ platform: "win32", arch: "x64", resourcesPath, env: {} });
   assert.equal(paths.ffmpeg, path.join(resourcesPath, "ffmpeg", "ffmpeg.exe"));
   assert.equal(paths.avs3Decoder, path.join(resourcesPath, "avs3", "avs3RM0Decoder.exe"));
@@ -22,8 +22,8 @@ test("Windows structured document paths honor explicit environment overrides", (
     arch: "x64",
     resourcesPath: "C:\\resources",
     env: {
-      FLYINGMOUSE_DOCSTRUCTURE_ENGINE_PATH: "D:\\private\\engine.exe",
-      FLYINGMOUSE_DOCSTRUCTURE_MODEL_DIR: "D:\\private\\models"
+      VIDEO_CONVERTER_DOCSTRUCTURE_ENGINE_PATH: "D:\\private\\engine.exe",
+      VIDEO_CONVERTER_DOCSTRUCTURE_MODEL_DIR: "D:\\private\\models"
     }
   });
   assert.equal(paths.docstructureEngine, "D:\\private\\engine.exe");
@@ -32,7 +32,7 @@ test("Windows structured document paths honor explicit environment overrides", (
 
 for (const arch of ["arm64", "x64"]) {
   test(`macOS ${arch} runtime paths select only the matching native bundle`, () => {
-    const resourcesPath = "/Applications/FlyingMouse Format.app/Contents/Resources";
+    const resourcesPath = "/Applications/Video Format Converter.app/Contents/Resources";
     const paths = resolveRuntimePaths({ platform: "darwin", arch, resourcesPath, env: {} });
     const engineRoot = path.join(resourcesPath, "engines", `darwin-${arch}`);
     assert.equal(paths.ffmpeg, path.join(engineRoot, "runtime", "bin", "ffmpeg"));
@@ -55,11 +55,11 @@ test("explicit environment overrides win without enabling AV3A on macOS", () => 
     arch: "arm64",
     resourcesPath: "/resources",
     env: {
-      FLYINGMOUSE_FFMPEG_PATH: "/custom/ffmpeg",
-      FLYINGMOUSE_LIBREOFFICE_PATH: "/custom/soffice",
-      FLYINGMOUSE_PDFTOPPM_PATH: "/custom/pdftoppm",
-      FLYINGMOUSE_TESSDATA_PATH: "/custom/tessdata",
-      FLYINGMOUSE_AVS3_DECODER_PATH: "/malicious/windows-decoder.exe"
+      VIDEO_CONVERTER_FFMPEG_PATH: "/custom/ffmpeg",
+      VIDEO_CONVERTER_LIBREOFFICE_PATH: "/custom/soffice",
+      VIDEO_CONVERTER_PDFTOPPM_PATH: "/custom/pdftoppm",
+      VIDEO_CONVERTER_TESSDATA_PATH: "/custom/tessdata",
+      VIDEO_CONVERTER_AVS3_DECODER_PATH: "/malicious/windows-decoder.exe"
     }
   });
   assert.equal(paths.ffmpeg, "/custom/ffmpeg");

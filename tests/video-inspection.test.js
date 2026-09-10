@@ -9,7 +9,7 @@ const { FFMPEG_PATH } = require("../config");
 const { convertMedia, probeMediaInfo, renderVideoThumbnail } = require("../media");
 
 const ffmpegAvailable = spawnSync(FFMPEG_PATH, ["-version"], { stdio: "ignore" }).status === 0;
-const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "flyingmouse-video-inspection-"));
+const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "video-converter-video-inspection-"));
 const inputPath = path.join(tempDir, "sample.mp4");
 
 before(() => {

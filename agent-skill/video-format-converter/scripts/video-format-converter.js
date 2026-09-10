@@ -9,7 +9,7 @@ const skillRoot = path.join(__dirname, "..");
 const configPath = path.join(skillRoot, "launcher.json");
 
 function fail(message) {
-  process.stderr.write(`${JSON.stringify({ ok: false, error: message, errorCode: "FLYINGMOUSE_LAUNCH_FAILED" })}\n`);
+  process.stderr.write(`${JSON.stringify({ ok: false, error: message, errorCode: "VIDEO_CONVERTER_LAUNCH_FAILED" })}\n`);
   process.exit(1);
 }
 
@@ -17,11 +17,11 @@ let config;
 try {
   config = JSON.parse(fs.readFileSync(configPath, "utf8"));
 } catch {
-  fail("FlyingMouse Format is not connected. Open the app and choose Connect to Agent.");
+  fail("Video Format Converter is not connected. Open the app and choose Connect to Agent.");
 }
 
 if (!path.isAbsolute(config.executable) || !fs.existsSync(config.executable)) {
-  fail("The configured FlyingMouse Format executable no longer exists. Reconnect it from the app.");
+  fail("The configured Video Format Converter executable no longer exists. Reconnect it from the app.");
 }
 
 const result = spawnSync(config.executable, [...(config.args || []), "--cli", ...process.argv.slice(2)], {

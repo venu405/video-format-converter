@@ -13,7 +13,7 @@ const {
 } = require("../settings-store");
 
 test("falls back when settings are missing, damaged, or point to a non-directory", async (t) => {
-  const scratch = await fsp.mkdtemp(path.join(os.tmpdir(), "flyingmouse-settings-test-"));
+  const scratch = await fsp.mkdtemp(path.join(os.tmpdir(), "video-converter-settings-test-"));
   t.after(() => fsp.rm(scratch, { recursive: true, force: true }));
   const settingsPath = path.join(scratch, "settings.json");
   const fallback = path.join(scratch, "Downloads");
@@ -31,7 +31,7 @@ test("falls back when settings are missing, damaged, or point to a non-directory
 });
 
 test("atomically stores and restores the last successful save directory", async (t) => {
-  const scratch = await fsp.mkdtemp(path.join(os.tmpdir(), "flyingmouse-settings-write-test-"));
+  const scratch = await fsp.mkdtemp(path.join(os.tmpdir(), "video-converter-settings-write-test-"));
   t.after(() => fsp.rm(scratch, { recursive: true, force: true }));
   const settingsPath = path.join(scratch, "config", "settings.json");
   const fallback = path.join(scratch, "Downloads");
@@ -57,7 +57,7 @@ test("atomically stores and restores the last successful save directory", async 
 });
 
 test("stores target mappings and language without erasing the save directory", async (t) => {
-  const scratch = await fsp.mkdtemp(path.join(os.tmpdir(), "flyingmouse-settings-v2-"));
+  const scratch = await fsp.mkdtemp(path.join(os.tmpdir(), "video-converter-settings-v2-"));
   t.after(() => fsp.rm(scratch, { recursive: true, force: true }));
   const settingsPath = path.join(scratch, "settings.json");
   const directory = path.join(scratch, "Converted");
@@ -78,7 +78,7 @@ test("stores target mappings and language without erasing the save directory", a
 });
 
 test("legacy migration fills missing mappings without overwriting newer choices", async (t) => {
-  const scratch = await fsp.mkdtemp(path.join(os.tmpdir(), "flyingmouse-settings-migrate-"));
+  const scratch = await fsp.mkdtemp(path.join(os.tmpdir(), "video-converter-settings-migrate-"));
   t.after(() => fsp.rm(scratch, { recursive: true, force: true }));
   const settingsPath = path.join(scratch, "settings.json");
   await updateSettings(settingsPath, { targetBySource: { pdf: "png" } });
@@ -93,7 +93,7 @@ test("legacy migration fills missing mappings without overwriting newer choices"
 });
 
 test("refuses to remember a path that is not an existing directory", async (t) => {
-  const scratch = await fsp.mkdtemp(path.join(os.tmpdir(), "flyingmouse-settings-invalid-test-"));
+  const scratch = await fsp.mkdtemp(path.join(os.tmpdir(), "video-converter-settings-invalid-test-"));
   t.after(() => fsp.rm(scratch, { recursive: true, force: true }));
   await assert.rejects(
     writeLastSaveDirectory(path.join(scratch, "settings.json"), path.join(scratch, "missing")),

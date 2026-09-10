@@ -19,7 +19,7 @@ const state = {
 };
 
 /* --- 渲染进程日志：转发到主进程 debug.log --- */
-const logBridge = window.flyingMouseFormat || {};
+const logBridge = window.videoConverter || {};
 
 function rendererLog(level, message, error) {
   const detail = error ? `${message}\n${error.stack || error.message || error}` : message;
@@ -86,19 +86,18 @@ const progressLabel = document.querySelector("#progressLabel");
 const progressPercent = document.querySelector("#progressPercent");
 const progressTrack = document.querySelector(".progress-track");
 const progressFill = document.querySelector("#progressFill");
-const mouseMascot = document.querySelector("#mouseMascot");
 const workflowSteps = [...document.querySelectorAll("[data-step]")];
 const {
   STORAGE_KEY: LEGACY_TARGET_STORAGE_KEY,
   readPreferences,
   rememberTarget,
   preferredTarget
-} = window.FlyingMouseConversionPreferences;
-const { LANGUAGE_STORAGE_KEY, createI18n } = window.FlyingMouseI18n;
+} = window.VideoConverterPreferences;
+const { LANGUAGE_STORAGE_KEY, createI18n } = window.VideoConverterI18n;
 
 const messages = {
   "zh-CN": {
-    "workspace.aria": "文件转换工作台", "brand.title": "鼠鼠帮你把文件转成需要的格式",
+    "workspace.aria": "文件转换工作台", "brand.title": "把视频转成你需要的格式",
     "language.label": "语言", "health.checking": "正在检测转换引擎", "health.failed": "检测失败",
     "diagnostics.export": "导出诊断", "diagnostics.saved": "诊断报告已保存到：{path}",
     "diagnostics.canceled": "已取消导出诊断报告。", "diagnostics.failed": "导出诊断失败：{message}",
@@ -124,9 +123,6 @@ const messages = {
     "settings.aria": "转换设置", "progress.label": "转换进度", "status.ready": "选择文件后会显示可用的转换格式。",
     "formats.aria": "支持格式", "formats.title": "当前支持",
     "formats.description": "仅支持常见视频格式之间的离线转换。",
-    "sponsor.aria": "支持鼠鼠", "sponsor.close": "收起", "sponsor.title": "请鼠鼠吃小鱼干 🐟",
-    "sponsor.description": "本软件永久免费。如果帮到了你，欢迎请鼠鼠吃根小鱼干～纯自愿。若有人收费售卖本软件，那一定是套壳圈钱的骗子，请勿上当。",
-    "sponsor.qrAlt": "微信收款码",
     "feedback.label": "问题反馈", "feedback.hint": "如需帮助，请导出诊断报告并查看错误提示。",
     "feedback.guide": "问题反馈：转换遇到问题，请导出诊断报告并查看错误提示，帮助信息详见软件说明。",
     "tutorial.close": "关闭",
@@ -134,7 +130,7 @@ const messages = {
     "tutorial.gotIt": "我知道了"
   },
   "en-US": {
-    "workspace.aria": "File conversion workspace", "brand.title": "Let Mouse convert files into the format you need",
+    "workspace.aria": "File conversion workspace", "brand.title": "Convert videos into the format you need",
     "language.label": "Language", "health.checking": "Checking conversion engines", "health.failed": "Check failed",
     "diagnostics.export": "Export diagnostics", "diagnostics.saved": "Diagnostics saved to: {path}",
     "diagnostics.canceled": "Diagnostics export canceled.", "diagnostics.failed": "Diagnostics export failed: {message}",
@@ -160,9 +156,6 @@ const messages = {
     "settings.aria": "Conversion settings", "progress.label": "Conversion progress", "status.ready": "Available target formats appear after you select files.",
     "formats.aria": "Supported formats", "formats.title": "Supported now",
     "formats.description": "Offline conversion between common video formats only.",
-    "sponsor.aria": "Support Mouse", "sponsor.close": "Close", "sponsor.title": "Buy Mouse a dried fish 🐟",
-    "sponsor.description": "This app is permanently free. If it helped you, you can buy Mouse a snack — completely optional. If anyone charges you for this app, it's a scam.",
-    "sponsor.qrAlt": "WeChat payment QR code",
     "feedback.label": "Feedback", "feedback.hint": "For help, export the diagnostics report and check the error details.",
     "feedback.guide": "Feedback: if a conversion fails, export the diagnostics report and check the error details. Help is described in the app documentation.",
     "tutorial.close": "Close",
@@ -195,15 +188,6 @@ function refreshLanguage() {
   renderBatchList();
 }
 
-const mouseAssets = {
-  idle: "/assets/mouse-format/mouse-idle.png",
-  upload: "/assets/mouse-format/mouse-upload.png",
-  analyzing: "/assets/mouse-format/mouse-analyzing.png",
-  converting: "/assets/mouse-format/mouse-converting.png",
-  batch: "/assets/mouse-format/mouse-batch.png",
-  success: "/assets/mouse-format/mouse-success.png",
-  error: "/assets/mouse-format/mouse-error.png"
-};
 
 const statusLabels = {
   pending: "等待",
@@ -251,11 +235,6 @@ function setStatus(message, type = "") {
   statusBox.className = `status-box ${type}`.trim();
 }
 
-function setMouseState(name) {
-  if (!mouseMascot) return;
-  mouseMascot.src = mouseAssets[name] || mouseAssets.idle;
-  mouseMascot.dataset.state = name;
-}
 
 function setWorkflowStep(step) {
   const visibleStep = step === "analyze" ? "select" : step;
@@ -454,9 +433,6 @@ async function ensureOutputSpace(indices) {
   }
 }
 
-function mouseStateForConversion() {
-  return state.files.length > 1 ? "batch" : "converting";
-}
 
 function setProgress(value, label, type = "") {
   const safeValue = Math.max(0, Math.min(100, Math.round(value)));
@@ -533,7 +509,6 @@ function clearFile() {
   convertButton.disabled = true;
   resetDownload();
   resetProgress();
-  setMouseState("upload");
   setStatus(t("status.ready"));
   setWorkflowStep("select");
 }
@@ -958,7 +933,6 @@ async function acceptFiles(fileList) {
     setStatus(i18n.language === "en-US"
       ? "This batch is too large for this computer. Convert the files in smaller batches."
       : "本批文件总大小超出当前电脑可处理范围，请分批转换。", "error");
-    setMouseState("error");
     fileInput.value = "";
     return;
   }
@@ -984,7 +958,6 @@ async function acceptFiles(fileList) {
     resetProgress();
     resetVideoInsight();
   }
-  setMouseState(state.files.length > 1 ? "batch" : "analyzing");
   setWorkflowStep("analyze");
   updateQueueMode();
   const summary = summarizeFiles(state.files);
@@ -1023,7 +996,6 @@ async function acceptFiles(fileList) {
     if (!targets.length) {
       setSelectPlaceholder(targetSelect, "", t("target.none"));
       setStatus(i18n.language === "en-US" ? "No common target format is available." : "队列中没有共同的目标格式。", "error");
-      setMouseState("error");
       renderBatchList();
       return;
     }
@@ -1038,7 +1010,6 @@ async function acceptFiles(fileList) {
     targetSelect.disabled = false;
     convertButton.disabled = false;
     syncVideoCodecField();
-    setMouseState(state.files.length > 1 ? "batch" : "idle");
     setStatus(i18n.language === "en-US"
       ? `Queued ${state.files.length} file(s). Select an output per item and convert.`
       : `已加入 ${state.files.length} 个文件。请为每项选择目标格式后转换。`);
@@ -1048,7 +1019,6 @@ async function acceptFiles(fileList) {
     if (selectionVersion !== state.selectionVersion) return;
     setStatus(i18n.language === "en-US" ? `Detection failed: ${error.message}` : `识别失败：${error.message}`, "error");
     setWorkflowStep("analyze");
-    setMouseState("error");
   } finally {
     fileInput.value = "";
   }
@@ -1128,9 +1098,9 @@ async function convertCurrentFiles() {
 async function saveResult(result) {
   if (!result) return;
 
-  if (window.flyingMouseFormat?.saveConvertedFile) {
+  if (window.videoConverter?.saveConvertedFile) {
     setStatus(`正在保存 ${result.fileName} 到所选目录…`);
-    const saved = await window.flyingMouseFormat.saveConvertedFile({
+    const saved = await window.videoConverter.saveConvertedFile({
       downloadUrl: result.downloadUrl,
       fileName: result.fileName,
       assets: Array.isArray(result.assets) ? result.assets : undefined
@@ -1266,9 +1236,9 @@ async function saveAllConvertedFiles() {
   if (!results.length) return;
 
   try {
-    if (window.flyingMouseFormat?.saveConvertedFiles) {
+    if (window.videoConverter?.saveConvertedFiles) {
       setStatus(`正在保存 ${results.length} 个文件到所选目录…`);
-      const saved = await window.flyingMouseFormat.saveConvertedFiles({ files: results });
+      const saved = await window.videoConverter.saveConvertedFiles({ files: results });
       if (saved?.canceled) {
         setStatus(i18n.language === "en-US" ? `${results.length} files converted. Not saved yet.` : `已转换 ${results.length} 个文件，尚未保存。`, "success");
         return;
@@ -1314,13 +1284,11 @@ dropPanel.addEventListener("dragover", (event) => {
   event.preventDefault();
   if (event.dataTransfer) event.dataTransfer.dropEffect = "copy";
   dropPanel.classList.add("dragging");
-  setMouseState("upload");
 });
 
 dropPanel.addEventListener("dragleave", (event) => {
   if (event.relatedTarget && dropPanel.contains(event.relatedTarget)) return;
   dropPanel.classList.remove("dragging");
-  setMouseState(state.files.length > 1 ? "batch" : state.files.length ? "idle" : "upload");
 });
 
 dropPanel.addEventListener("drop", async (event) => {
@@ -1482,13 +1450,11 @@ async function initializeApp() {
   applyStaticTranslations();
   await loadOutputDirectory();
   updateQueueMode();
-  setMouseState("upload");
   setWorkflowStep("select");
   await fetchCapabilities();
 }
 
 initializeApp().catch((error) => {
-  setMouseState("error");
   setStatus(error.message, "error");
   rendererLog("error", "能力检测失败", error);
 });

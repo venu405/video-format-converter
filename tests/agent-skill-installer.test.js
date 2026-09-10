@@ -9,13 +9,13 @@ const {
 } = require("../agent-skill-installer");
 
 test("discovers only existing Agent skill roots on macOS and Windows", async () => {
-  const home = await fs.mkdtemp(path.join(os.tmpdir(), "flyingmouse-roots-"));
+  const home = await fs.mkdtemp(path.join(os.tmpdir(), "video-converter-roots-"));
   await fs.mkdir(path.join(home, ".codex", "skills"), { recursive: true });
   await fs.mkdir(path.join(home, ".agents", "skills"), { recursive: true });
   const roots = await discoverSkillRoots({ home, platform: "darwin", env: {} });
   assert.deepEqual(roots.map((item) => item.id), ["codex", "agents"]);
 
-  const profile = await fs.mkdtemp(path.join(os.tmpdir(), "flyingmouse-win-roots-"));
+  const profile = await fs.mkdtemp(path.join(os.tmpdir(), "video-converter-win-roots-"));
   await fs.mkdir(path.join(profile, ".claude", "skills"), { recursive: true });
   const windowsRoots = await discoverSkillRoots({
     home: profile,
@@ -26,13 +26,13 @@ test("discovers only existing Agent skill roots on macOS and Windows", async () 
 });
 
 test("installs the bundled skill atomically with a platform launcher config", async () => {
-  const temp = await fs.mkdtemp(path.join(os.tmpdir(), "flyingmouse-skill-install-"));
+  const temp = await fs.mkdtemp(path.join(os.tmpdir(), "video-converter-skill-install-"));
   const source = path.join(temp, "source");
   const root = path.join(temp, "skills");
   await fs.mkdir(path.join(source, "scripts"), { recursive: true });
   await fs.mkdir(root, { recursive: true });
-  await fs.writeFile(path.join(source, "SKILL.md"), "---\nname: flyingmouse-format\ndescription: test\n---\n");
-  await fs.writeFile(path.join(source, "scripts", "flyingmouse-format.js"), "// test\n");
+  await fs.writeFile(path.join(source, "SKILL.md"), "---\nname: video-converter-format\ndescription: test\n---\n");
+  await fs.writeFile(path.join(source, "scripts", "video-format-converter.js"), "// test\n");
 
   const launcherExecutable = process.execPath;
   const result = await installAgentSkill({
@@ -42,14 +42,14 @@ test("installs the bundled skill atomically with a platform launcher config", as
   });
 
   assert.equal(result.installed.length, 1);
-  const installed = path.join(root, "flyingmouse-format");
+  const installed = path.join(root, "video-format-converter");
   const config = JSON.parse(await fs.readFile(path.join(installed, "launcher.json"), "utf8"));
   assert.equal(config.executable, path.resolve(launcherExecutable));
-  assert.equal(await fs.readFile(path.join(installed, "scripts", "flyingmouse-format.js"), "utf8"), "// test\n");
+  assert.equal(await fs.readFile(path.join(installed, "scripts", "video-format-converter.js"), "utf8"), "// test\n");
 });
 
 test("rejects a symlink skill root", async () => {
-  const temp = await fs.mkdtemp(path.join(os.tmpdir(), "flyingmouse-skill-link-"));
+  const temp = await fs.mkdtemp(path.join(os.tmpdir(), "video-converter-skill-link-"));
   const actual = path.join(temp, "actual");
   const linked = path.join(temp, "linked");
   const source = path.join(temp, "source");
@@ -57,7 +57,7 @@ test("rejects a symlink skill root", async () => {
   await fs.mkdir(source);
   await fs.writeFile(path.join(source, "SKILL.md"), "test");
   await fs.mkdir(path.join(source, "scripts"));
-  await fs.writeFile(path.join(source, "scripts", "flyingmouse-format.js"), "test");
+  await fs.writeFile(path.join(source, "scripts", "video-format-converter.js"), "test");
   await fs.symlink(actual, linked, "dir");
   await assert.rejects(() => installAgentSkill({
     sourceDir: source,
@@ -71,13 +71,13 @@ test("installs nested skill files from a read-only virtual source (asar 场景�
   // asar 内源，Electron 的 asar 补丁不覆盖 fs.cp，抛 ENOENT。修复后改为
   // readdir + readFile/writeFile 逐文件复制。此测试用只读权限源模拟 asar 的
   // 虚拟文件系统（无法写入/无法 cp 的源），验证逐文件复制仍能完整落盘。
-  const temp = await fs.mkdtemp(path.join(os.tmpdir(), "flyingmouse-skill-readonly-"));
+  const temp = await fs.mkdtemp(path.join(os.tmpdir(), "video-converter-skill-readonly-"));
   const source = path.join(temp, "source");
   const root = path.join(temp, "skills");
   await fs.mkdir(path.join(source, "scripts"), { recursive: true });
   await fs.mkdir(path.join(source, "agents"), { recursive: true });
-  await fs.writeFile(path.join(source, "SKILL.md"), "---\nname: flyingmouse-format\n---\n");
-  await fs.writeFile(path.join(source, "scripts", "flyingmouse-format.js"), "// wrapper\n");
+  await fs.writeFile(path.join(source, "SKILL.md"), "---\nname: video-converter-format\n---\n");
+  await fs.writeFile(path.join(source, "scripts", "video-format-converter.js"), "// wrapper\n");
   await fs.writeFile(path.join(source, "agents", "openai.yaml"), "interface: {}\n");
   await fs.mkdir(root, { recursive: true });
 
@@ -93,8 +93,8 @@ test("installs nested skill files from a read-only virtual source (asar 场景�
   });
 
   assert.equal(result.installed.length, 1);
-  const installed = path.join(root, "flyingmouse-format");
+  const installed = path.join(root, "video-format-converter");
   const entries = (await fs.readdir(installed, { recursive: true })).sort();
-  assert.deepEqual(entries, ["SKILL.md", "agents", path.join("agents", "openai.yaml"), "launcher.json", "scripts", path.join("scripts", "flyingmouse-format.js")].sort());
+  assert.deepEqual(entries, ["SKILL.md", "agents", path.join("agents", "openai.yaml"), "launcher.json", "scripts", path.join("scripts", "video-format-converter.js")].sort());
   assert.equal(await fs.readFile(path.join(installed, "agents", "openai.yaml"), "utf8"), "interface: {}\n");
 });

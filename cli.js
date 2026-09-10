@@ -146,7 +146,7 @@ async function writeRequestChunk(request, chunk) {
 }
 
 async function postMultipart(url, fields, files, fieldName) {
-  const boundary = `----flyingmouse-${randomUUID()}`;
+  const boundary = `----video-converter-${randomUUID()}`;
   const parts = [];
   for (const [name, value] of Object.entries(fields)) {
     if (value == null || value === "") continue;
@@ -297,7 +297,7 @@ async function executeCli(parsed, runtime) {
 }
 
 async function runCli(argv = process.argv.slice(2), runtime) {
-  process.env.FLYINGMOUSE_LOG_STDERR = "1";
+  process.env.VIDEO_CONVERTER_LOG_STDERR = "1";
   let parsed;
   try {
     parsed = parseCliArgs(argv);

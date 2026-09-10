@@ -7,7 +7,7 @@ const path = require("path");
 
 const ROOT = __dirname;
 const DEFAULT_PORT = Number(process.env.PORT || 5177);
-const RUNTIME_DIR = process.env.FLYINGMOUSE_RUNTIME_DIR || path.join(os.tmpdir(), "video-format-converter-runtime");
+const RUNTIME_DIR = process.env.VIDEO_CONVERTER_RUNTIME_DIR || path.join(os.tmpdir(), "video-format-converter-runtime");
 const UPLOAD_DIR = path.join(RUNTIME_DIR, "uploads");
 const OUTPUT_DIR = path.join(RUNTIME_DIR, "converted");
 const MAX_UPLOAD_BYTES = Number.MAX_SAFE_INTEGER;
@@ -16,7 +16,7 @@ const PRODUCT_EXPIRY_MS = 1000 * 60 * 60 * 24;
 function bundledFfmpegPath() {
   const resourcesPath = process.resourcesPath || "";
   const candidates = [
-    process.env.FLYINGMOUSE_FFMPEG_PATH,
+    process.env.VIDEO_CONVERTER_FFMPEG_PATH,
     resourcesPath && path.join(resourcesPath, "ffmpeg", "ffmpeg.exe"),
     path.join(ROOT, "bin", "ffmpeg", "ffmpeg.exe"),
     path.join(process.cwd(), "bin", "ffmpeg", "ffmpeg.exe")

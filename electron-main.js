@@ -32,7 +32,7 @@ const cliMode = cliMarkerIndex >= 0;
 // Route all logging (including from server.js and renderer-forwarded IPC
 // messages) to a single debug.log in the Electron userData directory.
 logger.setLogFile(path.join(app.getPath("userData"), "debug.log"));
-process.env.FLYINGMOUSE_LOG_FILE = logger.getLogFile();
+process.env.VIDEO_CONVERTER_LOG_FILE = logger.getLogFile();
 
 function log(message, error) {
   if (error) {
@@ -80,15 +80,15 @@ ipcMain.handle("get-app-version", (event) => {
 });
 
 function configureRuntime() {
-  // 每个进程独立的临时工作目录。旧版固定用同一个 %TEMP%\flyingmouse-format-runtime，
+  // 每个进程独立的临时工作目录。旧版固定用同一个 %TEMP%\video-converter-format-runtime，
   // 双开实例时各自 server 会在同目录互相清掉对方的产物（cleanupOldFiles 按 mtime 删），
   // 并共享 downloads 登记表之外的文件——本机日志实证过两实例并行（2026-08-25）。
   // 以 pid 为后缀后各实例完全隔离，互不干扰。
-  process.env.FLYINGMOUSE_RUNTIME_DIR = path.join(os.tmpdir(), `flyingmouse-format-runtime-${process.pid}`);
+  process.env.VIDEO_CONVERTER_RUNTIME_DIR = path.join(os.tmpdir(), `video-format-converter-runtime-${process.pid}`);
   const runtimePaths = resolveRuntimePaths({ resourcesPath: process.resourcesPath });
-  process.env.FLYINGMOUSE_FFMPEG_PATH = runtimePaths.ffmpeg;
-  log(`Runtime dir: ${process.env.FLYINGMOUSE_RUNTIME_DIR}`);
-  log(`FFmpeg path: ${process.env.FLYINGMOUSE_FFMPEG_PATH}`);
+  process.env.VIDEO_CONVERTER_FFMPEG_PATH = runtimePaths.ffmpeg;
+  log(`Runtime dir: ${process.env.VIDEO_CONVERTER_RUNTIME_DIR}`);
+  log(`FFmpeg path: ${process.env.VIDEO_CONVERTER_FFMPEG_PATH}`);
 }
 
 async function boot() {
@@ -97,7 +97,7 @@ async function boot() {
   // 第二个实例直接退出，聚焦已有窗口。
   const gotLock = app.requestSingleInstanceLock();
   if (!gotLock) {
-    log("Another FlyingMouse Format instance is running; quitting this one");
+    log("Another Video Format Converter instance is running; quitting this one");
     app.quit();
     return;
   }
@@ -114,13 +114,13 @@ async function boot() {
   const started = await serverRuntime.startServer(0);
   server = started.server;
   serverUrl = started.url;
-  console.log(`FlyingMouse Format started at ${started.url}`);
+  console.log(`Video Format Converter started at ${started.url}`);
   log(`Server started at ${started.url}`);
   createWindow(started.url);
 }
 
 function bundledSkillSource() {
-  return path.join(app.getAppPath(), "agent-skill", "flyingmouse-format");
+  return path.join(app.getAppPath(), "agent-skill", "video-format-converter");
 }
 
 function currentCliLauncher() {
@@ -337,7 +337,7 @@ ipcMain.handle("export-diagnostics", async (event) => {
   const lastSaveDirectory = await readLastSaveDirectory(settingsPath, app.getPath("downloads"));
   const result = await dialog.showSaveDialog(mainWindow, {
     title: "导出诊断报告 / Export diagnostics",
-    defaultPath: path.join(lastSaveDirectory, "FlyingMouse-Format-diagnostics.txt"),
+    defaultPath: path.join(lastSaveDirectory, "Video-Format-Converter-diagnostics.txt"),
     buttonLabel: "保存 / Save"
   });
   if (result.canceled || !result.filePath) return { canceled: true };
@@ -499,7 +499,7 @@ app.disableHardwareAcceleration();
 app.commandLine.appendSwitch("js-flags", "--max-old-space-size=1024");
 
 if (process.platform === "win32") {
-  app.setAppUserModelId("com.flyingmouse.format");
+  app.setAppUserModelId("com.venu405.videoformatconverter");
 }
 
 process.on("uncaughtException", (error) => log("Uncaught exception", error));

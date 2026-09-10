@@ -5,7 +5,7 @@ const path = require("node:path");
 const { after, before, test } = require("node:test");
 
 const runtimeDir = fs.mkdtempSync(path.join(os.tmpdir(), "video-only-boundary-"));
-process.env.FLYINGMOUSE_RUNTIME_DIR = runtimeDir;
+process.env.VIDEO_CONVERTER_RUNTIME_DIR = runtimeDir;
 
 const config = require("../config");
 const { startServer } = require("../server");

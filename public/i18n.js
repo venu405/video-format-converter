@@ -1,9 +1,9 @@
 (function exposeI18n(root, factory) {
   const api = factory();
   if (typeof module === "object" && module.exports) module.exports = api;
-  if (root) root.FlyingMouseI18n = api;
+  if (root) root.VideoConverterI18n = api;
 }(typeof globalThis === "object" ? globalThis : this, function createI18nModule() {
-  const LANGUAGE_STORAGE_KEY = "flyingmouse.language.v1";
+  const LANGUAGE_STORAGE_KEY = "videoConverter.language.v1";
 
   function normalizeLanguage(value) {
     return String(value || "").toLowerCase().startsWith("zh") ? "zh-CN" : "en-US";

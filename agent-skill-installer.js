@@ -6,7 +6,7 @@ const os = require("node:os");
 const path = require("node:path");
 const { randomUUID } = require("node:crypto");
 
-const SKILL_NAME = "flyingmouse-format";
+const SKILL_NAME = "video-format-converter";
 
 function candidateSkillRoots({ home = os.homedir(), platform = process.platform, env = process.env } = {}) {
   const userHome = platform === "win32" ? (env.USERPROFILE || home) : home;
@@ -45,7 +45,7 @@ async function assertRealDirectory(directory, label) {
 
 async function validateSourceTree(sourceDir) {
   const realSource = await assertRealDirectory(sourceDir, "Skill source");
-  const required = ["SKILL.md", path.join("scripts", "flyingmouse-format.js")];
+  const required = ["SKILL.md", path.join("scripts", "video-format-converter.js")];
   for (const entry of required) {
     const stat = await fsp.stat(path.join(realSource, entry)).catch(() => null);
     if (!stat?.isFile()) throw new Error(`Bundled skill is missing ${entry}.`);

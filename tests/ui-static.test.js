@@ -21,14 +21,17 @@ test("renderer exposes workflow hooks and drop zone copy", () => {
   assert.match(html, /id="dropHint"/);
 });
 
-test("renderer removes workspace mouse artwork, the support matrix, and floating sponsor mouse", () => {
+test("renderer keeps mouse artwork, the support matrix, and sponsor widget removed", () => {
   const html = readPublic("index.html");
   const app = readPublic("app.js");
+  const css = readPublic("styles.css");
   assert.doesNotMatch(html, /mouse-mascot|mouseMascot|mouse-stage/);
-  assert.match(app, /setMouseState|mouseAssets|mouseMascot/);
+  assert.doesNotMatch(app, /mouseAssets|setMouseState|mouseMascot|mouseStateForConversion/);
+  assert.doesNotMatch(css, /mouse-mascot|mouse-stage/);
   assert.doesNotMatch(html, /id="formatTable"|class="matrix"/);
   assert.doesNotMatch(html, /sponsorWidget|sponsorToggle|sponsor-qr\.jpg/);
-  assert.doesNotMatch(app, /sponsorToggle|setSponsorOpen/);
+  assert.doesNotMatch(app, /sponsorToggle|setSponsorOpen|"sponsor\./);
+  assert.doesNotMatch(css, /sponsor-/);
   assert.doesNotMatch(html, /3465177342@qq\.com/);
 });
 
@@ -36,10 +39,10 @@ test("renderer removes the header brand block but keeps the application favicon"
   const html = readPublic("index.html");
   assert.doesNotMatch(html, /class="brand-mouse"|class="brand-lockup"/);
   assert.match(html, /rel="icon"/);
-  assert.match(html, /href="\/assets\/mouse-format\/mouse-idle\.png"/);
+  assert.match(html, /href="\/assets\/app-icon\.svg"/);
 });
 
-test("Apple redesign preserves the original mouse brand classes", () => {
+test("Apple redesign keeps the shipped design tokens", () => {
   const css = readPublic("styles.css");
   assert.match(css, /--bg:\s*#f5f5f7/);
   assert.match(css, /--ink:\s*#1d1d1f/);

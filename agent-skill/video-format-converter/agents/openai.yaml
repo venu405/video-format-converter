@@ -1,0 +1,4 @@
+interface:
+  display_name: "Video Format Converter Skill"
+  short_description: "Convert videos with Video Format Converter's offline CLI"
+  default_prompt: "Use $video-format-converter to inspect supported targets and convert the user's local video files."

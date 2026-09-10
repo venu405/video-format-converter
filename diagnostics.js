@@ -88,7 +88,7 @@ function buildDiagnosticsReport(input = {}) {
   const boundedLog = tailUtf8(sanitized);
   const engines = Object.entries(input.engines || {}).sort(([left], [right]) => left.localeCompare(right));
   return [
-    "FlyingMouse Format diagnostics",
+    "Video Format Converter diagnostics",
     `Generated: ${safeField(input.generatedAt || new Date().toISOString())}`,
     `App version: ${safeField(input.appVersion)}`,
     `OS: ${safeField(input.platform)} ${safeField(input.release)} ${safeField(input.arch)}`,

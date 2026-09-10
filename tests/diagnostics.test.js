@@ -20,12 +20,12 @@ test("diagnostics report contains bounded platform and engine facts without full
       libreoffice: {
         enabled: false,
         errorCode: "OFFICE_ENGINE_PROFILE_FAILED",
-        executable: "C:\\Users\\Alice\\Downloads\\FlyingMouse\\soffice.com"
+        executable: "C:\\Users\\Alice\\Downloads\\Apps\\soffice.com"
       },
       ffmpeg: {
         enabled: true,
         version: "7.1",
-        executable: "D:\\apps\\FlyingMouse\\ffmpeg.exe"
+        executable: "D:\\apps\\Apps\\ffmpeg.exe"
       }
     },
     logText: "safe line"

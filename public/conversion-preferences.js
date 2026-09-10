@@ -1,9 +1,9 @@
 (function exposeConversionPreferences(root, factory) {
   const api = factory();
   if (typeof module === "object" && module.exports) module.exports = api;
-  if (root) root.FlyingMouseConversionPreferences = api;
+  if (root) root.VideoConverterPreferences = api;
 }(typeof globalThis === "object" ? globalThis : this, function createConversionPreferences() {
-  const STORAGE_KEY = "flyingmouse.conversionPreferences.v1";
+  const STORAGE_KEY = "videoConverter.conversionPreferences.v1";
   const aliases = new Map([
     ["jpeg", "jpg"],
     ["markdown", "md"],

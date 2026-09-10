@@ -48,7 +48,7 @@ test("translates placeholders and falls back to Chinese then the key", () => {
     "zh-CN": { greeting: "你好，{name}", chineseOnly: "仅中文" },
     "en-US": { greeting: "Hello, {name}" }
   };
-  assert.equal(translate(messages, "en-US", "greeting", { name: "Mouse" }), "Hello, Mouse");
+  assert.equal(translate(messages, "en-US", "greeting", { name: "World" }), "Hello, World");
   assert.equal(translate(messages, "en-US", "chineseOnly"), "仅中文");
   assert.equal(translate(messages, "en-US", "missing.key"), "missing.key");
 });

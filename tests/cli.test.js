@@ -27,7 +27,7 @@ test("CLI parses conversion, merge, JSON, and engine options", () => {
 });
 
 test("CLI preserves Chinese basenames and rejects ambiguous multi-file output", async () => {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "flyingmouse-cli-output-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "video-converter-cli-output-"));
   const destinations = resolveOutputDestinations([
     { fileName: "中文结果.md" },
     { fileName: "第二个.md" }

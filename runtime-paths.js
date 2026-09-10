@@ -14,7 +14,7 @@ function resolveRuntimePaths(options = {}) {
   if (platform === "win32") {
     if (arch !== "x64") throw new Error(`Unsupported Windows architecture: ${arch}`);
     return {
-      ffmpeg: override(env, "FLYINGMOUSE_FFMPEG_PATH", path.join(resourcesPath, "ffmpeg", "ffmpeg.exe"))
+      ffmpeg: override(env, "VIDEO_CONVERTER_FFMPEG_PATH", path.join(resourcesPath, "ffmpeg", "ffmpeg.exe"))
     };
   }
 
@@ -22,7 +22,7 @@ function resolveRuntimePaths(options = {}) {
     if (!new Set(["arm64", "x64"]).has(arch)) throw new Error(`Unsupported macOS architecture: ${arch}`);
     const engineRoot = path.join(resourcesPath, "engines", `darwin-${arch}`);
     return {
-      ffmpeg: override(env, "FLYINGMOUSE_FFMPEG_PATH", path.join(engineRoot, "runtime", "bin", "ffmpeg"))
+      ffmpeg: override(env, "VIDEO_CONVERTER_FFMPEG_PATH", path.join(engineRoot, "runtime", "bin", "ffmpeg"))
     };
   }
 

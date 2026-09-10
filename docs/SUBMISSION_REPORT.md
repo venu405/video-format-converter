@@ -11,14 +11,14 @@
 
 | 项 | 值 |
 |---|---|
-| 产品名（中文） | 飞鼠格式 / 视频格式转换器 |
-| 产品名（英文） | FlyingMouse Format |
+| 产品名（中文） | 视频格式转换器 |
+| 产品名（英文） | Video Format Converter |
 | `package.json` productName | `Video Format Converter` |
 | 当前版本（package.json） | **0.6.8** |
 | 已公开发布版本（GitHub Release） | **v0.6.7**（商店公开版） |
-| 作者 | 牢蜂（LaoFeng） |
+| 作者 | venu405 |
 | 许可证 | 非商用（详见 [LICENSE](../LICENSE)） |
-| 仓库 | `https://github.com/LaoFeng-mouse/flyingmouse-format.git` |
+| 仓库 | `https://github.com/venu405/video-format-converter.git` |
 | 技术栈 | Electron 43 + Express + FFmpeg + LibreOffice + Poppler + Tesseract（视频转换仅用 FFmpeg） |
 
 ---
@@ -56,13 +56,13 @@
 
 | 项 | 状态 |
 |---|---|
-| 远端仓库 | `https://github.com/LaoFeng-mouse/flyingmouse-format.git` |
+| 远端仓库 | `https://github.com/venu405/video-format-converter.git` |
 | 最新 Release | v0.6.7（商店公开版） |
 | 历史已删版本 | v0.6.1 / v0.6.2 / v0.6.3 |
 | **本机当前目录** | **未初始化为 git 仓库**（`fatal: not a git repository`） |
-| **提交给 HR** | 当前目录作为代码交付快照即可；如需正式 PR 流程，请在原仓库 `flyingmouse-format` 创建分支后合并 |
+| **提交给 HR** | 当前目录作为代码交付快照即可；如需正式 PR 流程，请在 `video-format-converter` 仓库创建分支后合并 |
 
-> **建议交付方式**（给 HR）：将本目录 `C:\Project\视频格式转换器-面试题` 打包（去掉 `node_modules/` 与 `output/win-unpacked*`），连同本文件 + `UI_SHIPPED.md` + `会话总结.md` 一并提交；正式 Release 走仓库 [github.com/LaoFeng-mouse/flyingmouse-format](https://github.com/LaoFeng-mouse/flyingmouse-format)。
+> **建议交付方式**（给 HR）：将本目录 `C:\Project\视频格式转换器-面试题` 打包（去掉 `node_modules/` 与 `output/win-unpacked*`），连同本文件 + `UI_SHIPPED.md` + `会话总结.md` 一并提交；正式 Release 走仓库 [github.com/venu405/video-format-converter](https://github.com/venu405/video-format-converter)。
 
 ---
 
@@ -115,7 +115,7 @@
 | 主观"画质提升 N%" | 无固定样本无法验证，营销数字不可信 |
 | 持续进度条百分比（基于字节） | 码率波动会让进度条来回跳（详见 [会话总结.md §五个必踩的坑](../会话总结.md)） |
 | 解锁音乐平台加密格式 | 法律风险（详见 [分发与合规规范.md](分发与合规规范.md)），公开版已移除 |
-| 粉红色旧版主题 | 与本次明确授权的 UI 重设计冲突，保留鼠鼠主视觉即可 |
+| 粉红色旧版主题 | 与本次明确授权的 UI 重设计冲突，保留简洁转换工作台即可 |
 
 ---
 

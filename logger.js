@@ -1,8 +1,8 @@
-// Unified logger for FlyingMouse Format.
+// Unified logger for Video Format Converter.
 //
 // Writes leveled log lines to a single file so failures can be diagnosed
 // after the fact. The target file is resolved in this priority order:
-//   1. FLYINGMOUSE_LOG_FILE env var (explicit override, used by tests)
+//   1. VIDEO_CONVERTER_LOG_FILE env var (explicit override, used by tests)
 //   2. Electron userData dir (desktop mode; the Electron main process calls
 //      setLogFile early so server.js and the renderer share the same file)
 //   3. Temp dir fallback (plain `node server.js` / tests without Electron)
@@ -14,7 +14,7 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 
-let logFileOverride = process.env.FLYINGMOUSE_LOG_FILE || "";
+let logFileOverride = process.env.VIDEO_CONVERTER_LOG_FILE || "";
 let resolvedFile = "";
 
 const LEVELS = {
@@ -40,7 +40,7 @@ function defaultLogFile() {
   } catch {
     // Not running inside Electron; fall through to temp dir.
   }
-  return path.join(os.tmpdir(), "flyingmouse-format-debug.log");
+  return path.join(os.tmpdir(), "video-format-converter-debug.log");
 }
 
 function ensureWritable(filePath) {
@@ -105,7 +105,7 @@ function write(level, message, error) {
     trimIfOversized(filePath);
     // Also mirror to stdout so `node server.js` sessions stay observable.
     if (LEVELS[level] >= LEVELS.WARN) {
-      const stream = process.env.FLYINGMOUSE_LOG_STDERR === "1" ? process.stderr : process.stdout;
+      const stream = process.env.VIDEO_CONVERTER_LOG_STDERR === "1" ? process.stderr : process.stdout;
       stream.write(`[${level}] ${message}${formatError(error)}\n`);
     }
   } catch {

@@ -35,7 +35,7 @@ const {
 } = require("./utils");
 const { convertMedia, probeMediaInfo, renderVideoThumbnail } = require("./media");
 
-if (process.env.FLYINGMOUSE_LOG_FILE) logger.setLogFile(process.env.FLYINGMOUSE_LOG_FILE);
+if (process.env.VIDEO_CONVERTER_LOG_FILE) logger.setLogFile(process.env.VIDEO_CONVERTER_LOG_FILE);
 
 const app = express();
 const CONTENT_SECURITY_POLICY = [

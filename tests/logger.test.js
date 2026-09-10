@@ -6,7 +6,7 @@ const path = require("path");
 const { after, before, test } = require("node:test");
 
 const logger = require("../logger");
-const scratchRoot = path.join(os.tmpdir(), `flyingmouse-format-logger-tests-${process.pid}`);
+const scratchRoot = path.join(os.tmpdir(), `video-converter-format-logger-tests-${process.pid}`);
 
 function readRoot(fileName) {
   return fs.readFileSync(path.join(__dirname, "..", fileName), "utf8");
@@ -91,7 +91,7 @@ test("preload exposes a log bridge to the renderer", () => {
 
 test("renderer reports uncaught errors and conversion failures to the main process", () => {
   const app = fs.readFileSync(path.join(__dirname, "..", "public", "app.js"), "utf8");
-  assert.match(app, /window\.flyingMouseFormat \|\| \{\}/, "log bridge fallback missing");
+  assert.match(app, /window\.videoConverter \|\| \{\}/, "log bridge fallback missing");
   assert.match(app, /function rendererLog\(/, "rendererLog helper missing");
   assert.match(app, /addEventListener\("error"/, "window error listener missing");
   assert.match(app, /addEventListener\("unhandledrejection"/, "unhandledrejection listener missing");
