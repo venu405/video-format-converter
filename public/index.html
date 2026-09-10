@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f5f7">
+    <title>Video Format Converter</title>
+    <link rel="icon" href="/assets/mouse-format/mouse-idle.png">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="workspace" data-i18n-aria="workspace.aria" aria-label="文件转换工作台">
+        <nav class="workflow-steps" id="workflowSteps" data-i18n-aria="workflow.aria" aria-label="转换流程">
+          <span class="workflow-step active" data-step="select" data-i18n="workflow.select">选择文件</span>
+          <span class="workflow-step" data-step="convert" data-i18n="workflow.convert">开始转换</span>
+          <span class="workflow-step" data-step="save" data-i18n="workflow.save">保存结果</span>
+        </nav>
+
+        <div class="output-directory-bar">
+          <span class="output-directory-label" data-i18n="outputDirectory.label">保存位置</span>
+          <button class="directory-picker" id="outputDirectoryButton" type="button">
+            <span class="directory-path" id="outputDirectoryPath" data-i18n="outputDirectory.loading">正在获取保存目录…</span>
+            <span class="directory-action" data-i18n="outputDirectory.choose">选择文件夹</span>
+          </button>
+        </div>
+
+        <div class="converter-grid">
+          <section class="drop-panel" data-i18n-aria="upload.aria" aria-label="上传文件">
+            <input id="fileInput" type="file" class="sr-only" multiple accept="video/*,.mp4,.mov,.mkv,.webm,.avi,.m4v,.m4s,.wmv,.flv">
+            <div class="queue-toolbar" id="queueToolbar" hidden aria-label="转换队列工具栏">
+              <div class="queue-toolbar-copy">
+                <span class="queue-toolbar-title">待转换视频</span>
+                <span class="queue-count" id="queueCount">0 个文件</span>
+              </div>
+              <div class="queue-toolbar-actions">
+                <button class="primary-button queue-quick-button" id="quickConvertButton" type="button" disabled>一键转换</button>
+                <button class="ghost-button queue-save-all-button" id="batchSaveButton" type="button" hidden data-i18n="action.saveAll">保存全部</button>
+                <button class="ghost-button queue-add-button" id="addFilesButton" type="button">添加视频</button>
+                <button class="ghost-button queue-clear-button" id="clearButton" type="button" data-i18n="action.clear">清空队列</button>
+              </div>
+            </div>
+            <button class="drop-zone" id="dropZone" type="button">
+              <svg class="drop-icon" viewBox="0 0 72 56" fill="none" aria-hidden="true">
+                <rect x="1.5" y="1.5" width="69" height="53" rx="10" stroke="currentColor" stroke-width="3"/>
+                <path d="M9 13v30M63 13v30" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity="0.35"/>
+                <path d="M30 18.5l15.5 9.5L30 37.5V18.5z" fill="#0071e3"/>
+              </svg>
+              <span class="drop-prompt">
+                <span class="drop-main" data-i18n="upload.title">拖拽视频到这里</span>
+                <span class="drop-sub" id="dropHint" data-i18n="upload.hint">或点击选择视频 · 拖入后自动生成缩略图</span>
+              </span>
+              <span class="format-chips" aria-hidden="true">
+                <span>MP4</span><span>MKV</span><span>WEBM</span><span>GIF</span>
+              </span>
+            </button>
+
+            <div class="file-strip" id="fileStrip" hidden>
+              <div>
+                <p class="file-name" id="fileName"></p>
+                <p class="file-meta" id="fileMeta"></p>
+              </div>
+            </div>
+            <section class="video-insight" id="videoInsight" hidden aria-live="polite">
+              <div class="video-thumbnail-wrap">
+                <img class="video-thumbnail" id="videoThumbnail" alt="视频缩略图" data-i18n-alt="mediaInfo.thumbnailAlt">
+              </div>
+              <div class="video-insight-copy">
+                <p class="video-insight-title" data-i18n="mediaInfo.title">视频信息</p>
+                <div class="video-info-grid" id="videoInfoGrid"></div>
+                <p class="video-info-status" id="videoInfoStatus"></p>
+              </div>
+            </section>
+            <div class="batch-list" id="batchList" hidden></div>
+            <p class="queue-empty-hint" id="queueEmptyHint" hidden>将视频拖入此处，或点击“添加视频”继续。</p>
+          </section>
+
+          <aside class="controls" data-i18n-aria="settings.aria" aria-label="转换设置" hidden aria-hidden="true">
+            <label class="field">
+              <span data-i18n="target.label">目标格式</span>
+              <select id="targetSelect" disabled>
+                <option value="" data-i18n="target.placeholder">先选择文件</option>
+              </select>
+            </label>
+            <label class="field" id="videoCodecField" hidden>
+              <span data-i18n="videoCodec.label">视频编码</span>
+              <select id="videoCodec">
+                <option value="auto" selected data-i18n="videoCodec.auto">智能转换（兼容时无损直拷）</option>
+                <option value="h264" data-i18n="videoCodec.h264">H.264（兼容性最好）</option>
+                <option value="h265" data-i18n="videoCodec.h265">H.265（体积更小）</option>
+                <option value="av1" data-i18n="videoCodec.av1">AV1（压缩率最高）</option>
+              </select>
+            </label>
+
+            <button class="primary-button" id="convertButton" type="button" disabled data-i18n="action.convert">开始转换</button>
+
+            <div class="progress-panel" id="progressPanel" hidden>
+              <div class="progress-header">
+                <span id="progressLabel" data-i18n="progress.label">转换进度</span>
+                <span id="progressPercent">0%</span>
+              </div>
+              <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-i18n-aria="progress.label" aria-label="转换进度">
+                <div class="progress-fill" id="progressFill"></div>
+              </div>
+            </div>
+
+            <div class="status-box" id="statusBox" role="status" data-i18n="status.ready">选择文件后会显示可用的转换格式。</div>
+            <button class="ghost-button preview-button" id="previewButton" type="button" hidden data-i18n="preview.open">预览</button>
+            <a class="download-button" id="downloadButton" hidden data-i18n="action.download">下载转换后的文件</a>
+          </aside>
+        </div>
+
+      </section>
+    </main>
+
+    <div class="preview-backdrop" id="previewBackdrop" hidden></div>
+    <aside class="preview-drawer" id="previewDrawer" hidden aria-labelledby="previewTitle" aria-modal="true" role="dialog">
+      <div class="preview-header">
+        <div>
+          <p class="eyebrow" data-i18n="preview.eyebrow">转换结果</p>
+          <h2 id="previewTitle" data-i18n="preview.title">文件预览</h2>
+          <p class="preview-meta" id="previewMeta"></p>
+        </div>
+        <button class="ghost-button preview-close" id="previewClose" type="button" data-i18n-aria="preview.close" aria-label="关闭预览">×</button>
+      </div>
+      <div class="preview-content" id="previewContent"></div>
+    </aside>
+
+    <script src="/i18n.js"></script>
+    <script src="/conversion-preferences.js"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>

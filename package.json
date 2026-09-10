@@ -1,0 +1,114 @@
+{
+  "name": "video-format-converter",
+  "version": "0.6.8",
+  "private": true,
+  "author": "venu405",
+  "productName": "Video Format Converter",
+  "engines": {
+    "node": ">=18"
+  },
+  "description": "Offline desktop video format converter powered by FFmpeg.",
+  "main": "electron-main.js",
+  "bin": {
+    "video-format-converter": "cli.js"
+  },
+  "scripts": {
+    "pretest": "node --test tests/video-only-boundary.test.js",
+    "pretest:ci": "node --test tests/video-only-boundary.test.js",
+    "start": "node server.js",
+    "desktop": "electron .",
+    "benchmark:video": "node scripts/benchmark-video.js",
+    "dist": "electron-builder --win nsis --publish never",
+    "test": "node --test tests/video-only-boundary.test.js tests/media-codec.test.js tests/video-inspection.test.js tests/video-queue.test.js tests/settings-store.test.js tests/electron-security.test.js",
+    "test:ci": "node --test tests/video-only-boundary.test.js tests/media-codec.test.js tests/video-inspection.test.js tests/video-queue.test.js tests/settings-store.test.js tests/electron-security.test.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "mime-types": "^2.1.35",
+    "multer": "^2.0.2",
+    "sanitize-filename": "^1.6.3"
+  },
+  "overrides": {
+    "uuid": "^11.1.1"
+  },
+  "devDependencies": {
+    "electron": "^43.1.0",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "com.venu405.videoformatconverter",
+    "productName": "Video Format Converter",
+    "artifactName": "${productName}-Setup-${version}-${arch}.${ext}",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron-main.js",
+      "cli.js",
+      "agent-skill-installer.js",
+      "electron-security.js",
+      "preload.js",
+      "server.js",
+      "diagnostics.js",
+      "runtime-paths.js",
+      "logger.js",
+      "settings-store.js",
+      "config.js",
+      "utils.js",
+      "media.js",
+      "public/**/*",
+      "agent-skill/**/*",
+      "package.json",
+      "node_modules/**/*",
+      "!node_modules/@img/**",
+      "!node_modules/sharp/**",
+      "!node_modules/@miconvert/**",
+      "!node_modules/@tesseract.js-data/**",
+      "!node_modules/tesseract.js/**",
+      "!node_modules/tesseract.js-core/**",
+      "!node_modules/pdf-lib/**",
+      "!node_modules/pdfjs-dist/**",
+      "!node_modules/docx/**",
+      "!node_modules/exceljs/**",
+      "!node_modules/mammoth/**",
+      "!node_modules/marked/**",
+      "!node_modules/yauzl/**",
+      "!node_modules/yazl/**"
+    ],
+    "win": {
+      "signExecutable": false,
+      "extraResources": [
+        {
+          "from": "bin/ffmpeg/ffmpeg.exe",
+          "to": "ffmpeg/ffmpeg.exe"
+        }
+      ],
+      "target": [
+        "nsis"
+      ]
+    },
+    "mac": {
+      "artifactName": "${productName}-Setup-${version}-mac-${arch}.${ext}",
+      "minimumSystemVersion": "11.0.0",
+      "identity": null,
+      "notarize": false,
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Video Format Converter"
+    }
+  }
+}

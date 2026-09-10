@@ -1,0 +1,35 @@
+node_modules/
+.worktrees/
+runtime/
+dist/
+test-results/
+# output 不入库，但豁免 ui-qa 界面截图（面试复核证据，见 docs/UI_SHIPPED.md）
+output/*
+!output/ui-qa/
+output/ui-qa/*
+!output/ui-qa/*.png
+.playwright-cli/
+bin/*
+!bin/avs3/
+!bin/avs3/avs3RM0Decoder.exe
+!bin/avs3/model.bin
+!bin/avs3/THIRD_PARTY_NOTICE.txt
+tests/fixtures/
+
+# 一次性验证脚本（保留供日志冒烟检查，不入库）
+scripts/tmp-e2e-log-check.js
+
+# 临时诊断脚本（agent 会话内创建，保留不入库）
+tmp_*
+scripts/tmp-*.js
+
+# Python 字节码缓存（docstructure 引擎构建产物，不入库）
+__pycache__/
+*.pyc
+scripts/.raw-samples/
+
+# AppX 打包证书/密钥（绝不入库）
+cert/
+
+# 本地 zstd 二进制工具（本机/Windows 用，CI 侧各自安装，不入库）
+/tools/zstd/
